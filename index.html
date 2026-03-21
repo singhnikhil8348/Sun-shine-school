@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Sun Shine Public School</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="bg-white shadow sticky top-0 z-50">
+
+<!-- NOTICE TICKER -->
+
+<div class="bg-yellow-300 py-2 px-4 overflow-hidden">
+
+<div id="noticeTicker" class="ticker-text text-sm font-semibold">
+
+Loading latest notices...
+
+</div>
+
+</div>
+<div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+
+<!-- LOGO IMAGE -->
+
+<div class="flex items-center gap-3">
+
+<img src="./images/logo.png"
+class="h-14 md:h-16 w-auto object-contain">
+
+<h1 class="text-lg md:text-2xl font-bold text-blue-700">
+Sun Shine Public School
+</h1>
+
+</div>
+
+<!-- MENU -->
+
+<nav id="navMenu" class="hidden md:flex space-x-6">
+
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="teachers.html">Teachers</a>
+<a href="facilities.html">Facilities</a>
+<a href="gallery.html">Gallery</a>
+<a href="notices.html">Notices</a>
+<a href="contact.html">Contact</a>
+
+</nav>
+
+<div id="menuToggle" class="md:hidden text-2xl cursor-pointer">
+☰
+</div>
+
+</div>
+
+<!-- MOBILE MENU -->
+
+<div id="mobileMenu" class="hidden flex flex-col bg-white p-4 space-y-3 md:hidden">
+
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="teachers.html">Teachers</a>
+<a href="facilities.html">Facilities</a>
+<a href="gallery.html">Gallery</a>
+<a href="notices.html">Notices</a>
+<a href="contact.html">Contact</a>
+
+</div>
+
+</header>
+
+<!-- HERO -->
+
+<section class="bg-blue-600 text-white text-center py-16 px-4">
+
+<h1 class="text-3xl md:text-5xl font-bold mb-4">
+Empowering Students
+</h1>
+
+<p class="mb-6 text-lg">
+Education from Nursery to Class 10
+</p>
+
+<div class="flex flex-col md:flex-row justify-center gap-4">
+
+<a href="admissions.html"
+class="bg-white text-blue-600 px-6 py-2 rounded-full transition duration-300 transform hover:scale-110 hover:bg-blue-100 shadow-lg">
+Apply Now
+</a>
+
+<a href="about.html"
+class="border border-white px-6 py-2 rounded-full transition duration-300 transform hover:scale-110 hover:bg-white hover:text-blue-600 shadow-lg">
+Explore School
+</a>
+
+</div>
+
+</section>
+<!-- ABOUT SECTION -->
+
+<section class="p-6 text-center bg-white">
+
+<h2 class="text-2xl md:text-3xl font-bold mb-4 text-blue-700">
+About Us
+</h2>
+
+<p class="max-w-3xl mx-auto text-gray-600 leading-relaxed">
+Sun Shine Public School is dedicated to providing quality education 
+from Nursery to Class 10. We focus on discipline, innovation, and 
+overall development of students to prepare them for a bright future.
+</p>
+
+</section>
+<!-- STATS (DYNAMIC) -->
+
+<section class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center p-6 bg-gray-100">
+
+<div>
+<h2 id="studentCount" class="text-2xl md:text-3xl font-bold">0</h2>
+<p>Students</p>
+</div>
+
+<div>
+<h2 id="teacherCount" class="text-2xl md:text-3xl font-bold">0</h2>
+<p>Teachers</p>
+</div>
+
+<div>
+<h2 id="yearCount" class="text-2xl md:text-3xl font-bold">0</h2>
+<p>Years Excellence</p>
+</div>
+
+<div>
+<h2 id="classCount" class="text-2xl md:text-3xl font-bold">0</h2>
+<p>Classrooms</p>
+</div>
+
+</section>
+
+<!-- FACILITIES -->
+
+<section class="p-6">
+
+<h2 class="text-2xl font-bold text-center mb-6">Our Facilities</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+<div class="p-4 shadow rounded text-center">
+<i class="fa-solid fa-book text-2xl mb-2"></i>
+<h3>Library</h3>
+</div>
+
+<div class="p-4 shadow rounded text-center">
+<i class="fa-solid fa-desktop text-2xl mb-2"></i>
+<h3>Computer Lab</h3>
+</div>
+
+<div class="p-4 shadow rounded text-center">
+<i class="fa-solid fa-flask text-2xl mb-2"></i>
+<h3>Science Lab</h3>
+</div>
+
+<div class="p-4 shadow rounded text-center">
+<i class="fa-solid fa-bus text-2xl mb-2"></i>
+<h3>Transport</h3>
+</div>
+
+</div>
+
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="bg-blue-50 py-12 text-center">
+
+<h2 class="text-2xl md:text-3xl font-bold mb-6 text-blue-700">
+What Parents Say
+</h2>
+
+<div class="max-w-2xl mx-auto relative">
+
+<div class="testimonial active">
+"Great school with amazing teachers."
+</div>
+
+<div class="testimonial">
+"My child loves studying here."
+</div>
+
+<div class="testimonial">
+"Very disciplined and caring environment."
+</div>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="bg-gray-900 text-white text-center p-6">
+© 2026 Sun Shine Public School
+</footer>
+
+<!-- SCRIPT -->
+
+<script>
+
+/* MOBILE MENU */
+
+document.getElementById("menuToggle").onclick = () => {
+
+document.getElementById("mobileMenu").classList.toggle("hidden")
+
+}
+
+
+/* LOAD STATS FROM BACKEND */
+
+fetch("http://localhost:5000/api/stats")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById("studentCount").innerText = data.students || 0
+document.getElementById("teacherCount").innerText = data.teachers || 0
+document.getElementById("yearCount").innerText = data.awards || 0
+document.getElementById("classCount").innerText = data.classes || 0
+
+})
+
+/* LOAD NOTICE TICKER */
+
+async function loadTicker(){
+
+try{
+
+const res = await fetch("http://localhost:5000/api/notices")
+const data = await res.json()
+
+// latest 5 notices
+const latest = data.slice(-5).reverse()
+
+let text = ""
+
+latest.forEach(n=>{
+text += `<span class="notice-item" onclick="goToNotices()">
+📢 ${n.title}
+</span>   •   `
+})
+
+document.getElementById("noticeTicker").innerHTML = text
+
+}catch(err){
+
+console.log(err)
+document.getElementById("noticeTicker").innerHTML = "Unable to load notices"
+
+}
+
+}
+
+loadTicker()
+
+function goToNotices(){
+window.location.href = "notices.html"
+}
+
+/* TESTIMONIAL SLIDER */
+
+let index = 0
+const testimonials = document.querySelectorAll(".testimonial")
+
+function showTestimonials(){
+
+testimonials.forEach(t => t.classList.remove("active"))
+
+index++
+if(index >= testimonials.length) index = 0
+
+testimonials[index].classList.add("active")
+
+}
+
+setInterval(showTestimonials, 3000)
+
+</script>
+
+</body>
+</html>

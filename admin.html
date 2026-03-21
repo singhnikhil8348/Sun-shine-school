@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>School Admin Panel</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 p-10">
+
+<h1 class="text-3xl font-bold mb-8 text-blue-700">School Admin Panel</h1>
+
+<button onclick="logout()" class="mb-6 bg-red-500 text-white px-4 py-2 rounded">
+Logout
+</button>
+
+
+<!-- Add Notice Section -->
+
+<div class="bg-white p-6 rounded shadow mb-10">
+
+<h2 class="text-xl font-bold mb-4">Add Notice</h2>
+
+<input id="title" placeholder="Title" class="border p-2 mb-3 block w-full">
+
+<input id="date" placeholder="Date" class="border p-2 mb-3 block w-full">
+
+<textarea id="desc" placeholder="Description" class="border p-2 mb-3 block w-full"></textarea>
+
+<button onclick="addNotice()" class="bg-blue-600 text-white px-6 py-2 rounded">
+Add Notice
+</button>
+
+</div>
+
+
+
+<!-- Notice List -->
+
+<div class="bg-white p-6 rounded shadow mb-10">
+
+<h2 class="text-xl font-bold mb-4">All Notices</h2>
+
+<table class="w-full border">
+
+<thead class="bg-blue-600 text-white">
+
+<tr>
+
+<th class="p-2">Title</th>
+<th class="p-2">Date</th>
+<th class="p-2">Description</th>
+<th class="p-2">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="noticeTable">
+
+<tr>
+<td colspan="4" class="text-center p-4">Loading notices...</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+<!-- Admission Requests -->
+
+<div class="bg-white p-6 rounded shadow mb-10">
+
+<button onclick="downloadAdmissions()" 
+class="mb-3 bg-green-600 text-white px-4 py-2 rounded">
+Download All Admissions
+</button>
+
+<button onclick="downloadSelectedAdmissions()" 
+class="mb-3 bg-green-800 text-white px-4 py-2 rounded ml-2">
+Download Selected Admissions
+</button>
+
+<button onclick="deleteSelectedAdmissions()" 
+class="mb-3 bg-red-600 text-white px-4 py-2 rounded ml-2">
+Delete Selected Admissions
+</button>
+
+<h2 class="text-xl font-bold mb-4">Admission Applications</h2>
+
+<table class="w-full border">
+
+<thead class="bg-blue-600 text-white">
+
+<tr>
+
+<th class="p-2"><input type="checkbox" onclick="toggleAllAdmissions(this)"></th>
+<th class="p-2">Student</th>
+<th class="p-2">Class</th>
+<th class="p-2">Parent</th>
+<th class="p-2">Phone</th>
+<th class="p-2">Email</th>
+<th class="p-2">Date</th>
+<th class="p-2">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="admissionsTable">
+
+<tr>
+<td colspan="5" class="text-center p-4">Loading applications...</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- Contact Messages -->
+
+<div class="bg-white p-6 rounded shadow mb-10">
+
+<button onclick="deleteSelectedContacts()" 
+class="mb-3 bg-red-600 text-white px-4 py-2 rounded">
+Delete Selected Messages
+</button>
+
+<h2 class="text-xl font-bold mb-4">Contact Messages</h2>
+
+<table class="w-full border">
+
+<thead class="bg-blue-600 text-white">
+
+<tr>
+
+<th><input type="checkbox" onclick="toggleAllContacts(this)"></th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Message</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="contactTable">
+
+<tr>
+<td colspan="4" class="text-center p-4">Loading messages...</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- Gallery Upload -->
+
+<div class="bg-white p-6 rounded shadow">
+
+<h2 class="text-xl font-bold mb-4">Upload Gallery Image</h2>
+
+<input type="file" id="imageFile" class="border p-2 mb-4 block">
+
+<button onclick="uploadImage()" class="bg-green-600 text-white px-6 py-2 rounded">
+Upload Image
+</button>
+
+</div>
+
+<!-- Gallery Manager -->
+
+<div class="bg-white p-6 rounded shadow mt-10">
+
+<h2 class="text-xl font-bold mb-4">Manage Gallery</h2>
+
+<div id="adminGallery" class="grid grid-cols-4 gap-4">
+
+Loading images...
+
+</div>
+
+</div>
+<!-- =========================
+ADD TEACHER
+========================= -->
+
+<div class="bg-white p-6 rounded shadow mt-10">
+
+<h2 class="text-xl font-bold mb-4">Add Teacher</h2>
+
+<input id="teacherName" placeholder="Teacher Name" class="border p-2 mb-3 block w-full">
+
+<input id="teacherSubject" placeholder="Subject" class="border p-2 mb-3 block w-full">
+
+<input id="teacherQualification" placeholder="Qualification" class="border p-2 mb-3 block w-full">
+
+<input id="teacherExperience" placeholder="Experience" class="border p-2 mb-3 block w-full">
+
+<input type="file" id="teacherPhoto" class="border p-2 mb-4 block">
+
+<button onclick="addTeacher()" class="bg-blue-600 text-white px-6 py-2 rounded">
+Add Teacher
+</button>
+
+</div>
+
+
+
+<!-- =========================
+MANAGE TEACHERS
+========================= -->
+
+<div class="bg-white p-6 rounded shadow mt-10">
+
+<h2 class="text-xl font-bold mb-4">Manage Teachers</h2>
+
+<div id="teacherList" class="grid grid-cols-4 gap-4">
+
+Loading teachers...
+
+</div>
+
+<!-- STATS MANAGEMENT -->
+
+<div class="bg-white p-6 rounded shadow mb-10">
+
+<h2 class="text-xl font-bold mb-6">Website Statistics</h2>
+
+<!-- STUDENTS -->
+<label class="block font-semibold mb-1">Total Students</label>
+<input id="totalStudents"
+type="number"
+class="border p-2 mb-4 w-full rounded">
+
+<!-- TEACHERS -->
+<label class="block font-semibold mb-1">Total Teachers</label>
+<input id="totalTeachers"
+type="number"
+class="border p-2 mb-4 w-full rounded">
+
+<!-- CLASSES -->
+<label class="block font-semibold mb-1">Total Classes</label>
+<input id="totalClasses"
+type="number"
+class="border p-2 mb-4 w-full rounded">
+
+<!-- YEARS / AWARDS -->
+<label class="block font-semibold mb-1">Years of Excellence / Awards</label>
+<input id="totalAwards"
+type="number"
+class="border p-2 mb-6 w-full rounded">
+
+<!-- BUTTON -->
+<button onclick="updateStats()"
+class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded w-full">
+Update Statistics
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* ADMIN PROTECTION */
+
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+window.location.href="admin-login.html"
+}
+
+
+/* LOGOUT */
+
+function logout(){
+localStorage.removeItem("adminLoggedIn")
+window.location.href="admin-login.html"
+}
+
+
+/* ADD NOTICE */
+
+async function addNotice(){
+
+const data = {
+
+title: document.getElementById("title").value,
+date: document.getElementById("date").value,
+description: document.getElementById("desc").value
+
+}
+
+const res = await fetch("http://localhost:5000/api/add-notice",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify(data)
+
+})
+
+const result = await res.json()
+
+alert(result.message)
+
+loadNotices()
+
+}
+
+
+
+/* LOAD NOTICES */
+
+async function loadNotices(){
+
+const res = await fetch("http://localhost:5000/api/notices")
+
+const data = await res.json()
+
+const table = document.getElementById("noticeTable")
+
+table.innerHTML=""
+
+data.forEach(notice => {
+
+table.innerHTML += `
+
+<tr class="border-b">
+
+<td class="p-2">${notice.title}</td>
+
+<td class="p-2">${notice.date}</td>
+
+<td class="p-2">${notice.description}</td>
+
+<td class="p-2">
+<button onclick="deleteNotice('${notice._id}')" class="bg-red-500 text-white px-3 py-1 rounded">
+Delete
+</button>
+</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+
+
+/* DELETE NOTICE */
+
+async function deleteNotice(id){
+
+if(!confirm("Delete this notice?")) return
+
+await fetch(`http://localhost:5000/api/delete-notice/${id}`,{
+
+method:"DELETE"
+
+})
+
+loadNotices()
+
+}
+
+
+
+/* LOAD ADMISSIONS */
+
+async function loadAdmissions(){
+
+const res = await fetch("http://localhost:5000/api/admissions")
+const data = await res.json()
+
+const table = document.getElementById("admissionsTable")
+table.innerHTML=""
+
+data.forEach(app => {
+
+table.innerHTML += `
+
+<tr class="border-b">
+
+<td class="p-2">
+<input type="checkbox" class="admissionCheck" value="${app._id}">
+</td>
+
+<td class="p-2">${app.studentName}</td>
+<td class="p-2">${app.className}</td>
+<td class="p-2">${app.parentName}</td>
+<td class="p-2">${app.phone}</td>
+<td class="p-2">${app.email}</td>
+<td class="p-2">${new Date(app.createdAt).toLocaleDateString()}</td>
+
+<td class="p-2">
+<button onclick="deleteAdmission('${app._id}')"
+class="bg-red-500 text-white px-3 py-1 rounded">
+Delete
+</button>
+</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+/* DELETE SINGLE ADMISSION */
+
+async function deleteAdmission(id){
+
+if(!confirm("Delete this admission?")) return
+
+await fetch(`http://localhost:5000/api/delete-admission/${id}`,{
+method:"DELETE"
+})
+
+loadAdmissions()
+
+}
+
+
+/* SELECT ALL ADMISSIONS */
+
+function toggleAllAdmissions(source){
+
+const checks = document.querySelectorAll(".admissionCheck")
+
+checks.forEach(c => c.checked = source.checked)
+
+}
+
+
+/* DELETE SELECTED ADMISSIONS */
+
+async function deleteSelectedAdmissions(){
+
+const checks = document.querySelectorAll(".admissionCheck:checked")
+
+if(checks.length === 0){
+alert("No admissions selected")
+return
+}
+
+if(!confirm("Delete selected admissions?")) return
+
+for(const c of checks){
+
+await fetch(`http://localhost:5000/api/delete-admission/${c.value}`,{
+method:"DELETE"
+})
+
+}
+
+loadAdmissions()
+
+}
+
+/* DOWNLOAD ALL ADMISSIONS */
+
+async function downloadAdmissions(){
+
+const res = await fetch("http://localhost:5000/api/admissions")
+
+const data = await res.json()
+
+let csv = "Student Name,Class,Parent Name,Phone,Email\n"
+
+data.forEach(a=>{
+
+csv += `${a.studentName},${a.className},${a.parentName},${a.phone},${a.email}\n`
+
+})
+
+downloadCSV(csv,"admissions.csv")
+
+}
+
+
+
+/* DOWNLOAD SELECTED ADMISSIONS */
+
+async function downloadSelectedAdmissions(){
+
+const checks = document.querySelectorAll(".admissionCheck:checked")
+
+if(checks.length === 0){
+alert("No admissions selected")
+return
+}
+
+let csv = "Student Name,Class,Parent Name,Phone,Email\n"
+
+for(const c of checks){
+
+const res = await fetch(`http://localhost:5000/api/admission/${c.value}`)
+const a = await res.json()
+
+csv += `${a.studentName},${a.className},${a.parentName},${a.phone},${a.email}\n`
+
+}
+
+downloadCSV(csv,"selected_admissions.csv")
+
+}
+
+
+
+/* CSV DOWNLOAD HELPER */
+
+function downloadCSV(csv,filename){
+
+const blob = new Blob([csv],{type:"text/csv"})
+
+const url = window.URL.createObjectURL(blob)
+
+const a = document.createElement("a")
+
+a.href = url
+a.download = filename
+
+a.click()
+
+}
+
+/* LOAD CONTACT MESSAGES */
+
+async function loadContacts(){
+
+const res = await fetch("http://localhost:5000/api/contacts")
+const data = await res.json()
+
+const table = document.getElementById("contactTable")
+
+table.innerHTML=""
+
+data.forEach(msg=>{
+
+table.innerHTML += `
+
+<tr class="border-b">
+
+<td>
+<input type="checkbox" class="contactCheck" value="${msg._id}">
+</td>
+
+<td>${msg.name}</td>
+<td>${msg.email}</td>
+<td>${msg.phone}</td>
+<td>${msg.message}</td>
+
+<td>
+<button onclick="deleteContact('${msg._id}')"
+class="bg-red-500 text-white px-3 py-1 rounded">
+Delete
+</button>
+</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+async function deleteContact(id){
+
+if(!confirm("Delete this message?")) return
+
+await fetch(`http://localhost:5000/api/delete-contact/${id}`,{
+method:"DELETE"
+})
+
+loadContacts()
+
+}
+
+
+function toggleAllContacts(source){
+
+const checks = document.querySelectorAll(".contactCheck")
+
+checks.forEach(c => c.checked = source.checked)
+
+}
+
+
+async function deleteSelectedContacts(){
+
+const checks = document.querySelectorAll(".contactCheck:checked")
+
+if(checks.length === 0){
+alert("No messages selected")
+return
+}
+
+if(!confirm("Delete selected messages?")) return
+
+for(const c of checks){
+
+await fetch(`http://localhost:5000/api/delete-contact/${c.value}`,{
+method:"DELETE"
+})
+
+}
+
+loadContacts()
+
+}
+
+
+/* UPLOAD GALLERY IMAGE */
+
+async function uploadImage(){
+
+const fileInput = document.getElementById("imageFile")
+
+if(fileInput.files.length === 0){
+alert("Please select an image")
+return
+}
+
+const formData = new FormData()
+
+formData.append("image",fileInput.files[0])
+
+const res = await fetch("http://localhost:5000/api/upload-image",{
+
+method:"POST",
+body:formData
+
+})
+
+const result = await res.json()
+
+alert(result.message)
+
+fileInput.value=""
+
+}
+
+/* LOAD GALLERY FOR ADMIN */
+
+async function loadGallery(){
+
+const res = await fetch("http://localhost:5000/api/gallery")
+
+const data = await res.json()
+
+const container = document.getElementById("adminGallery")
+
+container.innerHTML=""
+
+data.forEach(img=>{
+
+container.innerHTML += `
+
+<div class="relative">
+
+<img src="http://localhost:5000/uploads/${img.image}" 
+class="rounded shadow">
+
+<button onclick="deleteImage('${img._id}')"
+class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded">
+Delete
+</button>
+
+</div>
+
+`
+
+})
+
+}
+
+/* DELETE IMAGE */
+
+async function deleteImage(id){
+
+if(!confirm("Delete this image?")) return
+
+await fetch(`http://localhost:5000/api/delete-image/${id}`,{
+method:"DELETE"
+})
+
+loadGallery()
+
+}
+
+/* ADD TEACHER */
+
+async function addTeacher(){
+
+const formData = new FormData()
+
+formData.append("name",document.getElementById("teacherName").value)
+formData.append("subject",document.getElementById("teacherSubject").value)
+formData.append("qualification",document.getElementById("teacherQualification").value)
+formData.append("experience",document.getElementById("teacherExperience").value)
+
+const photo = document.getElementById("teacherPhoto").files[0]
+
+formData.append("photo",photo)
+
+const res = await fetch("http://localhost:5000/api/add-teacher",{
+
+method:"POST",
+body:formData
+
+})
+
+const result = await res.json()
+
+alert(result.message)
+
+loadTeachers()
+
+}
+
+/* LOAD TEACHERS */
+
+async function loadTeachers(){
+
+const res = await fetch("http://localhost:5000/api/teachers")
+
+const data = await res.json()
+
+const container = document.getElementById("teacherList")
+
+container.innerHTML=""
+
+data.forEach(t=>{
+
+container.innerHTML += `
+
+<div class="border p-3 rounded text-center">
+
+<img src="http://localhost:5000/uploads/${t.photo}" 
+class="w-full h-40 object-cover mb-2 rounded">
+
+<h3 class="font-bold">${t.name}</h3>
+
+<p>${t.subject}</p>
+
+<p>${t.experience}</p>
+
+<button onclick="deleteTeacher('${t._id}')"
+class="bg-red-600 text-white px-3 py-1 rounded mt-2">
+Delete
+</button>
+
+</div>
+
+`
+
+})
+
+}
+
+/* DELETE TEACHER */
+
+async function deleteTeacher(id){
+
+if(!confirm("Delete this teacher?")) return
+
+await fetch(`http://localhost:5000/api/delete-teacher/${id}`,{
+
+method:"DELETE"
+
+})
+
+loadTeachers()
+
+}
+
+/* UPDATE STATE */
+async function updateStats(){
+
+const data = {
+
+students:document.getElementById("totalStudents").value,
+teachers:document.getElementById("totalTeachers").value,
+classes:document.getElementById("totalClasses").value,
+awards:document.getElementById("totalAwards").value
+
+}
+
+const res = await fetch("http://localhost:5000/api/update-stats",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
+
+})
+
+const result = await res.json()
+
+alert(result.message)
+
+}
+
+/* LOAD STATS ON ADMIN PANEL */
+
+async function loadStats(){
+
+const res = await fetch("http://localhost:5000/api/stats")
+const data = await res.json()
+
+document.getElementById("totalStudents").value = data.students || 0
+document.getElementById("totalTeachers").value = data.teachers || 0
+document.getElementById("totalClasses").value = data.classes || 0
+document.getElementById("totalAwards").value = data.awards || 0
+
+}
+
+loadStats()
+
+/* INITIAL LOAD */
+
+loadNotices()
+loadAdmissions()
+loadContacts()
+loadGallery()
+loadTeachers()
+</script>
+
+</body>
+
+</html>

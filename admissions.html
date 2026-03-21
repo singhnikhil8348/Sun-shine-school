@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admissions</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body class="bg-gray-100">
+
+<section class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+
+<h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Admission Form</h2>
+
+<form id="admissionForm" class="grid gap-4">
+
+<input type="text" id="studentName" placeholder="Student Name" class="border p-3 rounded" required>
+
+<input type="text" id="className" placeholder="Class Applying For" class="border p-3 rounded" required>
+
+<input type="text" id="parentName" placeholder="Parent Name" class="border p-3 rounded" required>
+
+<input type="tel" id="phone" placeholder="Phone Number" class="border p-3 rounded" required>
+
+<input type="email" id="email" placeholder="Email (Optional - if available)" class="border p-3 rounded">
+
+<button type="submit" class="bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition">
+Submit Application
+</button>
+
+</form>
+
+</section>
+
+<script>
+
+document.getElementById("admissionForm").addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const data = {
+
+studentName: document.getElementById("studentName").value,
+className: document.getElementById("className").value,
+parentName: document.getElementById("parentName").value,
+phone: document.getElementById("phone").value,
+email: document.getElementById("email").value
+
+}
+
+console.log("Sending data:", data)
+
+try{
+
+const res = await fetch("http://localhost:5000/api/apply",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
+
+})
+
+const result = await res.json()
+
+if(res.ok){
+
+// redirect to thank you page
+window.location.href = "thank-you.html"
+
+}else{
+
+alert(result.message || "Application failed")
+
+}
+
+document.getElementById("admissionForm").reset()
+
+}catch(err){
+
+console.log(err)
+alert("Server error. Please try again.")
+
+}
+
+})
+
+</script>
+
+</body>
+
+</html>
