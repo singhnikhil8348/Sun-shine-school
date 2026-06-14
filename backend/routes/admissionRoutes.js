@@ -1,20 +1,31 @@
 const express = require("express")
 const router = express.Router()
+const { body, param } = require("express-validator")
 
 const Admission = require("../models/Admission")
+const requireAuth = require("../middleware/auth")
+const validateRequest = require("../middleware/validateRequest")
 
 // Submit admission form
-router.post("/apply", async (req, res) => {
-
-console.log("Form data received:", req.body)
+router.post("/apply", [
+body("studentName").trim().isLength({ min: 2, max: 80 }).withMessage("Student name is required"),
+body("className").trim().isLength({ min: 1, max: 40 }).withMessage("Class is required"),
+body("parentName").trim().isLength({ min: 2, max: 80 }).withMessage("Parent name is required"),
+body("phone").trim().matches(/^[0-9+\-\s()]{7,20}$/).withMessage("Enter a valid phone number"),
+body("email").optional({ checkFalsy: true }).isEmail().normalizeEmail().withMessage("Enter a valid email")
+], validateRequest, async (req, res) => {
 
 try {
 
-const newAdmission = new Admission(req.body)
+const newAdmission = new Admission({
+studentName: req.body.studentName,
+className: req.body.className,
+parentName: req.body.parentName,
+phone: req.body.phone,
+email: req.body.email
+})
 
 await newAdmission.save()
-
-console.log("Data saved to MongoDB")
 
 res.json({
 message: "Application submitted successfully"
@@ -34,7 +45,7 @@ message: "Error saving application"
 
 
 // Get all admissions (for admin dashboard)
-router.get("/admissions", async (req, res) => {
+router.get("/admissions", requireAuth, async (req, res) => {
 
 try {
 
@@ -56,7 +67,9 @@ message: "Error fetching admissions"
 
 /* GET SINGLE ADMISSION */
 
-router.get("/admission/:id", async (req,res)=>{
+router.get("/admission/:id", requireAuth, [
+param("id").isMongoId().withMessage("Invalid admission id")
+], validateRequest, async (req,res)=>{
 
 try{
 
@@ -76,7 +89,9 @@ message:"Error fetching admission"
 
 /* DELETE ADMISSION */
 
-router.delete("/delete-admission/:id", async (req,res)=>{
+router.delete("/delete-admission/:id", requireAuth, [
+param("id").isMongoId().withMessage("Invalid admission id")
+], validateRequest, async (req,res)=>{
 
 try{
 

@@ -2,7 +2,17 @@ async function loadNotices(){
 
 try{
 
-const res = await fetch("http://localhost:5000/api/notices")
+const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
+
+const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#39;"
+}[char]))
+
+const res = await fetch(`${API_BASE_URL}/api/notices`)
 
 const data = await res.json()
 
@@ -17,15 +27,15 @@ container.innerHTML += `
 <div class="card bg-white p-6 rounded shadow hover:shadow-lg transition">
 
 <h3 class="text-xl font-bold text-blue-700 mb-2">
-${n.title}
+${escapeHTML(n.title)}
 </h3>
 
 <p class="text-sm text-gray-500 mb-2">
-${n.date}
+${escapeHTML(n.date)}
 </p>
 
 <p class="text-gray-700">
-${n.description}
+${escapeHTML(n.description)}
 </p>
 
 </div>

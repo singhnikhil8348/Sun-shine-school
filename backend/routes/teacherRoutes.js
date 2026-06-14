@@ -1,31 +1,23 @@
 const express = require("express")
 const router = express.Router()
-const multer = require("multer")
 const fs = require("fs")
 const path = require("path")
+const { body, param } = require("express-validator")
 
 const Teacher = require("../models/Teacher")
-
-/* STORAGE CONFIG */
-
-const storage = multer.diskStorage({
-
-destination: function(req,file,cb){
-cb(null,"uploads/")
-},
-
-filename: function(req,file,cb){
-cb(null, Date.now() + "-" + file.originalname)
-}
-
-})
-
-const upload = multer({ storage })
+const requireAuth = require("../middleware/auth")
+const upload = require("../middleware/uploadImage")
+const validateRequest = require("../middleware/validateRequest")
 
 
 /* ADD TEACHER */
 
-router.post("/add-teacher", upload.single("photo"), async (req,res)=>{
+router.post("/add-teacher", requireAuth, upload.single("photo"), [
+body("name").trim().isLength({ min: 2, max: 80 }).withMessage("Teacher name is required"),
+body("subject").trim().isLength({ min: 2, max: 80 }).withMessage("Subject is required"),
+body("qualification").trim().isLength({ min: 2, max: 120 }).withMessage("Qualification is required"),
+body("experience").trim().isLength({ min: 1, max: 80 }).withMessage("Experience is required")
+], validateRequest, async (req,res)=>{
 
 try{
 
@@ -87,7 +79,9 @@ message:"Error fetching teachers"
 
 /* DELETE TEACHER */
 
-router.delete("/delete-teacher/:id", async (req,res)=>{
+router.delete("/delete-teacher/:id", requireAuth, [
+param("id").isMongoId().withMessage("Invalid teacher id")
+], validateRequest, async (req,res)=>{
 
 try{
 

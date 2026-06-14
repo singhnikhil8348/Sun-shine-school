@@ -223,7 +223,20 @@ What Parents Say
 
 <!-- SCRIPT -->
 
+<script src="js/config.js"></script>
 <script>
+
+const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
+
+function escapeHTML(value){
+return String(value ?? "").replace(/[&<>"']/g, char => ({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#39;"
+}[char]))
+}
 
 /* MOBILE MENU */
 
@@ -236,7 +249,7 @@ document.getElementById("mobileMenu").classList.toggle("hidden")
 
 /* LOAD STATS FROM BACKEND */
 
-fetch("http://localhost:5000/api/stats")
+fetch(`${API_BASE_URL}/api/stats`)
 
 .then(res=>res.json())
 
@@ -255,7 +268,7 @@ async function loadTicker(){
 
 try{
 
-const res = await fetch("http://localhost:5000/api/notices")
+const res = await fetch(`${API_BASE_URL}/api/notices`)
 const data = await res.json()
 
 // latest 5 notices
@@ -265,7 +278,7 @@ let text = ""
 
 latest.forEach(n=>{
 text += `<span class="notice-item" onclick="goToNotices()">
-📢 ${n.title}
+${escapeHTML(n.title)}
 </span>   •   `
 })
 

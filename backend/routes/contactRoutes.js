@@ -1,11 +1,19 @@
 const express = require("express")
 const router = express.Router()
+const { body, param } = require("express-validator")
 
 const Contact = require("../models/Contact")
+const requireAuth = require("../middleware/auth")
+const validateRequest = require("../middleware/validateRequest")
 
 /* SUBMIT CONTACT FORM */
 
-router.post("/contact", async (req,res)=>{
+router.post("/contact", [
+body("name").trim().isLength({ min: 2, max: 80 }).withMessage("Name is required"),
+body("email").trim().isEmail().normalizeEmail().withMessage("Enter a valid email"),
+body("phone").optional({ checkFalsy: true }).trim().matches(/^[0-9+\-\s()]{7,20}$/).withMessage("Enter a valid phone number"),
+body("message").trim().isLength({ min: 5, max: 1000 }).withMessage("Message should be 5 to 1000 characters")
+], validateRequest, async (req,res)=>{
 
 try{
 
@@ -39,7 +47,7 @@ message:"Error sending message"
 
 /* GET ALL MESSAGES (ADMIN) */
 
-router.get("/contacts", async (req,res)=>{
+router.get("/contacts", requireAuth, async (req,res)=>{
 
 try{
 
@@ -60,7 +68,9 @@ message:"Error fetching messages"
 
 /* DELETE MESSAGE */
 
-router.delete("/delete-contact/:id", async (req,res)=>{
+router.delete("/delete-contact/:id", requireAuth, [
+param("id").isMongoId().withMessage("Invalid contact id")
+], validateRequest, async (req,res)=>{
 
 try{
 
@@ -74,28 +84,6 @@ message:"Message deleted"
 
 res.status(500).json({
 message:"Delete failed"
-})
-
-}
-
-})
-
-/* DELETE CONTACT MESSAGE */
-
-router.delete("/delete-contact/:id", async (req,res)=>{
-
-try{
-
-await Contact.findByIdAndDelete(req.params.id)
-
-res.json({
-message:"Message deleted successfully"
-})
-
-}catch(err){
-
-res.status(500).json({
-message:"Error deleting message"
 })
 
 }

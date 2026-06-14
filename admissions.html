@@ -36,7 +36,10 @@ Submit Application
 
 </section>
 
+<script src="js/config.js"></script>
 <script>
+
+const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
 
 document.getElementById("admissionForm").addEventListener("submit", async function(e){
 
@@ -52,11 +55,9 @@ email: document.getElementById("email").value
 
 }
 
-console.log("Sending data:", data)
-
 try{
 
-const res = await fetch("http://localhost:5000/api/apply",{
+const res = await fetch(`${API_BASE_URL}/api/apply`,{
 
 method:"POST",
 headers:{
@@ -83,7 +84,6 @@ document.getElementById("admissionForm").reset()
 
 }catch(err){
 
-console.log(err)
 alert("Server error. Please try again.")
 
 }

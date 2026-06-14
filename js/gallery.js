@@ -2,7 +2,9 @@
    LOAD GALLERY FROM SERVER
 ========================= */
 
-fetch("http://localhost:5000/api/gallery")
+const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
+
+fetch(`${API_BASE_URL}/api/gallery`)
 
 .then(res => res.json())
 
@@ -16,7 +18,7 @@ data.forEach(img => {
 
 container.innerHTML += `
 
-<img src="http://localhost:5000/uploads/${img.image}" 
+<img src="${API_BASE_URL}/uploads/${encodeURIComponent(img.image)}" 
 class="gallery-img rounded shadow cursor-pointer">
 
 `

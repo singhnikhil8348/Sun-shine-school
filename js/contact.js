@@ -11,7 +11,9 @@ message:document.getElementById("message").value
 
 }
 
-const res = await fetch("http://localhost:5000/api/contact",{
+const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
+
+const res = await fetch(`${API_BASE_URL}/api/contact`,{
 
 method:"POST",
 

@@ -1,32 +1,24 @@
 const express = require("express")
 const router = express.Router()
-const multer = require("multer")
 const fs = require("fs")
+const path = require("path")
+const { param } = require("express-validator")
 
 const Gallery = require("../models/Gallery")
-
-/* STORAGE */
-
-const storage = multer.diskStorage({
-
-destination:(req,file,cb)=>{
-cb(null,"uploads/")
-},
-
-filename:(req,file,cb)=>{
-cb(null,Date.now()+"-"+file.originalname)
-}
-
-})
-
-const upload = multer({storage:storage})
+const requireAuth = require("../middleware/auth")
+const upload = require("../middleware/uploadImage")
+const validateRequest = require("../middleware/validateRequest")
 
 
 /* UPLOAD IMAGE */
 
-router.post("/upload-image", upload.single("image"), async (req,res)=>{
+router.post("/upload-image", requireAuth, upload.single("image"), async (req,res)=>{
 
 try{
+
+if(!req.file){
+return res.status(400).json({message:"Image is required"})
+}
 
 const newImage = new Gallery({
 image:req.file.filename
@@ -74,7 +66,9 @@ message:"Error fetching gallery"
 
 /* DELETE IMAGE */
 
-router.delete("/delete-image/:id", async (req,res)=>{
+router.delete("/delete-image/:id", requireAuth, [
+param("id").isMongoId().withMessage("Invalid image id")
+], validateRequest, async (req,res)=>{
 
 try{
 
@@ -84,7 +78,11 @@ if(!image){
 return res.status(404).json({message:"Image not found"})
 }
 
-fs.unlinkSync("uploads/"+image.image)
+const filePath = path.join(__dirname, "..", "uploads", image.image)
+
+if(fs.existsSync(filePath)){
+fs.unlinkSync(filePath)
+}
 
 await Gallery.findByIdAndDelete(req.params.id)
 

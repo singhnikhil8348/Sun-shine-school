@@ -4,26 +4,36 @@ const admissionSchema = new mongoose.Schema({
 
 studentName: {
 type: String,
-required: true
+required: true,
+trim: true,
+maxlength: 80
 },
 
 className: {
 type: String,
-required: true
+required: true,
+trim: true,
+maxlength: 40
 },
 
 parentName: {
 type: String,
-required: true
+required: true,
+trim: true,
+maxlength: 80
 },
 
 phone: {
 type: String,
-required: true
+required: true,
+trim: true,
+maxlength: 20
 },
 
 email: {
 type: String,
+trim: true,
+maxlength: 120
 },
 
 createdAt: {

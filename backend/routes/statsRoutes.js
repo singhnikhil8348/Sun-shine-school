@@ -1,7 +1,10 @@
 const express = require("express")
 const router = express.Router()
+const { body } = require("express-validator")
 
 const Stats = require("../models/Stats")
+const requireAuth = require("../middleware/auth")
+const validateRequest = require("../middleware/validateRequest")
 
 /* GET STATS */
 
@@ -37,7 +40,12 @@ message: "Error fetching stats"
 
 /* UPDATE STATS */
 
-router.post("/update-stats", async (req, res) => {
+router.post("/update-stats", requireAuth, [
+body("students").isInt({ min: 0, max: 100000 }).withMessage("Students must be a positive number"),
+body("teachers").isInt({ min: 0, max: 10000 }).withMessage("Teachers must be a positive number"),
+body("classes").isInt({ min: 0, max: 1000 }).withMessage("Classes must be a positive number"),
+body("awards").isInt({ min: 0, max: 1000 }).withMessage("Awards must be a positive number")
+], validateRequest, async (req, res) => {
 
 try {
 

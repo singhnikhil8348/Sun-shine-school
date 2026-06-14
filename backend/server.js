@@ -1,6 +1,9 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
+const dotenv = require("dotenv")
+const helmet = require("helmet")
+const rateLimit = require("express-rate-limit")
 
 const admissionRoutes = require("./routes/admissionRoutes")
 const noticeRoutes = require("./routes/noticeRoutes")
@@ -11,13 +14,44 @@ const contactRoutes = require("./routes/contactRoutes")
 const statsRoutes = require("./routes/statsRoutes")
 
 const app = express()
+dotenv.config()
 
-app.use(cors())
-app.use(express.json())
+const allowedOrigins = (process.env.FRONTEND_ORIGIN || "http://localhost:5500")
+.split(",")
+.map(origin => origin.trim())
+
+app.use(helmet({
+crossOriginResourcePolicy: { policy: "cross-origin" }
+}))
+
+app.use(cors({
+origin: allowedOrigins,
+methods: ["GET", "POST", "DELETE"],
+allowedHeaders: ["Content-Type", "Authorization"]
+}))
+
+app.use(express.json({ limit: "100kb" }))
+
+app.use(rateLimit({
+windowMs: 15 * 60 * 1000,
+limit: 300,
+standardHeaders: true,
+legacyHeaders: false
+}))
+
+app.use("/api/admin-login", rateLimit({
+windowMs: 15 * 60 * 1000,
+limit: 10,
+standardHeaders: true,
+legacyHeaders: false,
+message: { message: "Too many login attempts. Please try again later." }
+}))
 
 /* MONGODB */
 
-mongoose.connect("mongodb://127.0.0.1:27017/schoolDB")
+mongoose.set("sanitizeFilter", true)
+
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/schoolDB")
 .then(()=>{
 console.log("Database connected successfully")
 })
@@ -45,8 +79,21 @@ app.use("/api", statsRoutes)
 
 app.use("/uploads", express.static("uploads"))
 
+app.use((err, req, res, next) => {
+if(err){
+console.error(err.message)
+return res.status(400).json({
+message: err.message || "Request failed"
+})
+}
+
+return next()
+})
+
 /* START SERVER */
 
-app.listen(5000,()=>{
-console.log("Server running on http://localhost:5000")
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT,()=>{
+console.log(`Server running on http://localhost:${PORT}`)
 })
