@@ -1,74 +1,183 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Admin Login</title>
-<script src="https://cdn.tailwindcss.com"></script>
+  <title>Admin Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded shadow-lg w-96">
+    
+    <!-- Login Form -->
+    <div id="loginSection">
+      <h1 class="text-2xl font-bold mb-6 text-center text-blue-700">School Admin Login</h1>
+      <form id="loginForm" class="space-y-4">
+        <input id="username" type="text" placeholder="Username" class="border p-2 w-full rounded" required>
+        <input id="password" type="password" placeholder="Password" class="border p-2 w-full rounded" required>
+        <button type="submit" class="bg-blue-600 text-white p-2 w-full rounded font-bold">Login</button>
+        <p id="loginError" class="text-red-500 text-sm text-center"></p>
+      </form>
+      <button onclick="showForgotPassword()" class="block text-center text-blue-600 text-sm mt-4 w-full hover:underline">
+        Forgot Password?
+      </button>
+    </div>
 
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <!-- Forgot Password Form -->
+    <div id="forgotSection" class="hidden">
+      <h1 class="text-2xl font-bold mb-6 text-center text-blue-700">Forgot Password</h1>
+      <form id="forgotForm" class="space-y-4">
+        <input id="forgotUsername" type="text" placeholder="Enter Username" class="border p-2 w-full rounded" required>
+        <button type="submit" class="bg-blue-600 text-white p-2 w-full rounded font-bold">Send Reset Token</button>
+        <p id="forgotError" class="text-red-500 text-sm text-center"></p>
+        <p id="forgotSuccess" class="text-green-600 text-sm text-center"></p>
+      </form>
+      <button onclick="showLogin()" class="block text-center text-blue-600 text-sm mt-4 w-full hover:underline">
+        Back to Login
+      </button>
+    </div>
 
-<div class="bg-white p-8 rounded shadow w-96">
+    <!-- Reset Password Form -->
+    <div id="resetSection" class="hidden">
+      <h1 class="text-2xl font-bold mb-6 text-center text-blue-700">Reset Password</h1>
+      <form id="resetForm" class="space-y-4">
+        <input id="resetUsername" type="text" placeholder="Username" class="border p-2 w-full rounded" required>
+        <input id="resetToken" type="text" placeholder="Reset Token" class="border p-2 w-full rounded" required>
+        <input id="newPassword" type="password" placeholder="New Password" class="border p-2 w-full rounded" required>
+        <input id="confirmPassword" type="password" placeholder="Confirm Password" class="border p-2 w-full rounded" required>
+        <button type="submit" class="bg-blue-600 text-white p-2 w-full rounded font-bold">Reset Password</button>
+        <p id="resetError" class="text-red-500 text-sm text-center"></p>
+        <p id="resetSuccess" class="text-green-600 text-sm text-center"></p>
+      </form>
+      <button onclick="showLogin()" class="block text-center text-blue-600 text-sm mt-4 w-full hover:underline">
+        Back to Login
+      </button>
+    </div>
 
-<h2 class="text-2xl font-bold mb-6 text-center text-blue-700">
-School Admin Login
-</h2>
+  </div>
 
-<input id="username" placeholder="Username" class="border p-2 mb-4 w-full rounded">
+  <script>
+    const API_BASE = window.API_BASE_URL || "http://localhost:5000"
 
-<input id="password" type="password" placeholder="Password" class="border p-2 mb-4 w-full rounded">
+    /* Toggle Functions */
+    function showForgotPassword() {
+      document.getElementById("loginSection").classList.add("hidden")
+      document.getElementById("forgotSection").classList.remove("hidden")
+      document.getElementById("resetSection").classList.add("hidden")
+    }
 
-<button onclick="login()" class="bg-blue-600 text-white w-full py-2 rounded">
-Login
-</button>
+    function showResetPassword() {
+      document.getElementById("loginSection").classList.add("hidden")
+      document.getElementById("forgotSection").classList.add("hidden")
+      document.getElementById("resetSection").classList.remove("hidden")
+    }
 
-</div>
+    function showLogin() {
+      document.getElementById("loginSection").classList.remove("hidden")
+      document.getElementById("forgotSection").classList.add("hidden")
+      document.getElementById("resetSection").classList.add("hidden")
+      document.getElementById("loginError").textContent = ""
+      document.getElementById("forgotError").textContent = ""
+      document.getElementById("forgotSuccess").textContent = ""
+      document.getElementById("resetError").textContent = ""
+      document.getElementById("resetSuccess").textContent = ""
+    }
 
-<script src="js/config.js"></script>
-<script>
+    /* Login Form Handler */
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault()
+      const username = document.getElementById("username").value
+      const password = document.getElementById("password").value
+      const errorEl = document.getElementById("loginError")
 
-const API_BASE_URL = window.API_BASE_URL || "http://localhost:5000"
+      try {
+        const response = await fetch(`${API_BASE}/api/admin-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        })
 
-async function login(){
+        const data = await response.json()
 
-const data = {
-username: document.getElementById("username").value,
-password: document.getElementById("password").value
-}
+        if (response.ok) {
+          localStorage.setItem("adminToken", data.token)
+          localStorage.setItem("adminUser", JSON.stringify(data.user))
+          window.location.href = "admin.html"
+        } else {
+          errorEl.textContent = data.message || "Login failed"
+        }
+      } catch (err) {
+        errorEl.textContent = "Error: " + err.message
+      }
+    })
 
-try{
+    /* Forgot Password Form Handler */
+    document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+      e.preventDefault()
+      const username = document.getElementById("forgotUsername").value
+      const errorEl = document.getElementById("forgotError")
+      const successEl = document.getElementById("forgotSuccess")
 
-const res = await fetch(`${API_BASE_URL}/api/admin-login`,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify(data)
-})
+      errorEl.textContent = ""
+      successEl.textContent = ""
 
-const result = await res.json()
+      try {
+        const response = await fetch(`${API_BASE}/api/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username })
+        })
 
-if(res.ok && result.token){
+        const data = await response.json()
 
-localStorage.setItem("adminToken",result.token)
+        if (response.ok) {
+          successEl.textContent = "Reset Token: " + data.resetToken + " (copy this)"
+          document.getElementById("forgotForm").reset()
+          setTimeout(showResetPassword, 2000)
+        } else {
+          errorEl.textContent = data.message || "Error"
+        }
+      } catch (err) {
+        errorEl.textContent = "Error: " + err.message
+      }
+    })
 
-window.location.href="admin.html"
+    /* Reset Password Form Handler */
+    document.getElementById("resetForm").addEventListener("submit", async (e) => {
+      e.preventDefault()
+      const username = document.getElementById("resetUsername").value
+      const resetToken = document.getElementById("resetToken").value
+      const newPassword = document.getElementById("newPassword").value
+      const confirmPassword = document.getElementById("confirmPassword").value
+      const errorEl = document.getElementById("resetError")
+      const successEl = document.getElementById("resetSuccess")
 
-}else{
+      errorEl.textContent = ""
+      successEl.textContent = ""
 
-alert(result.message || "Invalid username or password")
+      if (newPassword !== confirmPassword) {
+        errorEl.textContent = "Passwords do not match"
+        return
+      }
 
-}
+      try {
+        const response = await fetch(`${API_BASE}/api/reset-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, newPassword, resetToken })
+        })
 
-}catch(err){
+        const data = await response.json()
 
-alert("Server error")
-
-}
-
-}
-
-</script>
-
+        if (response.ok) {
+          successEl.textContent = "Password reset successfully! Redirecting to login..."
+          document.getElementById("resetForm").reset()
+          setTimeout(showLogin, 2000)
+        } else {
+          errorEl.textContent = data.message || "Error"
+        }
+      } catch (err) {
+        errorEl.textContent = "Error: " + err.message
+      }
+    })
+  </script>
 </body>
 </html>
